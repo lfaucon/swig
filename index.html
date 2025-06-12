@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SWIG</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 20px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .propositions {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .proposition {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .easy {
+            background-color: #e7f5e7;
+            border-left: 5px solid #4CAF50;
+        }
+        .medium {
+            background-color: #fff8e1;
+            border-left: 5px solid #FFC107;
+        }
+        .hard {
+            background-color: #ffebee;
+            border-left: 5px solid #F44336;
+        }
+        .level {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .easy .level {
+            color: #4CAF50;
+        }
+        .medium .level {
+            color: #FFC107;
+        }
+        .hard .level {
+            color: #F44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>SWIG</h1>
+    
+    <div class="container">
+        <button id="generateBtn">Generate Propositions</button>
+        
+        <div class="propositions" id="propositionsContainer">
+            <div class="proposition easy">
+                <div class="level">Easy:</div>
+                <div id="easyProposition">Click the button to generate a proposition</div>
+            </div>
+            <div class="proposition medium">
+                <div class="level">Medium:</div>
+                <div id="mediumProposition">Click the button to generate a proposition</div>
+            </div>
+            <div class="proposition hard">
+                <div class="level">Hard:</div>
+                <div id="hardProposition">Click the button to generate a proposition</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database of propositions
+        const propositions = {
+            easy: [
+                // Daily Life
+                "Brushing teeth", "Taking a shower", "Making breakfast", "Riding a bicycle", "Walking the dog",
+                "Washing dishes", "Watching TV", "Reading a book", "Sleeping", "Eating dinner",
+                "Going shopping", "Driving a car", "Using a smartphone", "Taking a photo", "Writing a letter",
+                "Drinking coffee", "Listening to music", "Running", "Swimming", "Playing with a pet",
+                "Cooking dinner", "Cleaning the house", "Doing laundry", "Taking out trash", "Making the bed",
+                "Watering plants", "Checking email", "Talking on the phone", "Putting on shoes", "Brushing hair",
+                "Opening a door", "Sitting on a chair", "Typing on keyboard", "Using a remote control", "Setting an alarm",
+                "Turning on lights", "Closing a window", "Locking a door", "Charging a phone", "Putting on clothes",
+                "Tying shoelaces", "Washing hands", "Combing hair", "Putting on makeup", "Shaving",
+                
+                // Food and Drink
+                "Apple", "Banana", "Orange", "Pizza", "Hamburger",
+                "Ice cream", "Chocolate", "Coffee", "Tea", "Water",
+                "Milk", "Juice", "Sandwich", "Pasta", "Rice",
+                "Bread", "Cheese", "Chicken", "Salad", "Soup",
+                "Cake", "Cookie", "Donut", "Popcorn", "French fries",
+                "Soda", "Lemonade", "Hot chocolate", "Pancakes", "Eggs",
+                "Bacon", "Toast", "Cereal", "Yogurt", "Strawberry",
+                "Watermelon", "Grapes", "Carrot", "Potato", "Tomato",
+                
+                // Emotions
+                "Happy", "Sad", "Angry", "Surprised", "Scared",
+                "Excited", "Tired", "Bored", "Confused", "Relaxed",
+                "Nervous", "Proud", "Shy", "Jealous", "Calm",
+                "Worried", "Disappointed", "Embarrassed", "Grateful", "Hopeful",
+                
+                // Simple Characters
+                "Superman", "Batman", "Spider-Man", "Mickey Mouse", "Donald Duck",
+                "Snow White", "Cinderella", "Pinocchio", "Santa Claus", "Easter Bunny",
+                "Tooth Fairy", "Winnie the Pooh", "Elsa", "Olaf", "Simba",
+                "Nemo", "Dory", "Woody", "Buzz Lightyear", "Mario",
+                "Luigi", "Sonic", "Pikachu", "Hello Kitty", "Snoopy",
+                
+                // Simple Objects
+                "Chair", "Table", "Bed", "Lamp", "Clock",
+                "Television", "Computer", "Phone", "Book", "Pen",
+                "Pencil", "Notebook", "Backpack", "Umbrella", "Glasses",
+                "Hat", "Shoes", "Socks", "T-shirt", "Pants",
+                "Jacket", "Watch", "Ring", "Necklace", "Earrings",
+                "Cup", "Plate", "Fork", "Knife", "Spoon",
+                "Bottle", "Can", "Box", "Bag", "Key",
+                "Door", "Window", "Mirror", "Picture frame", "Pillow",
+                "Blanket", "Toothbrush", "Soap", "Shampoo", "Towel",
+                "Scissors", "Tape", "Glue", "Paper", "Envelope",
+                "Stamp", "Coin", "Bill", "Wallet", "Purse",
+                "Sunglasses", "Camera", "Headphones", "Microphone", "Speaker",
+                "Ball", "Doll", "Teddy bear", "Toy car", "Puzzle",
+                "Balloon", "Candle", "Flower", "Tree", "Grass",
+                "Sun", "Moon", "Star", "Cloud", "Rain",
+                "Snow", "Beach", "Mountain", "River", "Lake"
+            ],
+            medium: [
+                // Daily Life (More Complex)
+                "Going to a job interview", "Planning a vacation", "Assembling furniture", "Filing taxes", "Getting a haircut",
+                "Changing a flat tire", "Planting a garden", "Renovating a room", "Learning a new language", "Taking a driving test",
+                "Organizing a birthday party", "Applying for a loan", "Moving to a new house", "Starting a new job", "Joining a gym",
+                "Taking a yoga class", "Visiting a museum", "Attending a concert", "Going on a blind date", "Hosting a dinner party",
+                "Fixing a leaky faucet", "Building a bookshelf", "Painting a room", "Installing a new app", "Setting up wifi",
+                "Booking a flight", "Reserving a hotel room", "Renting a car", "Taking public transportation", "Giving a presentation",
+                "Writing a resume", "Applying for college", "Opening a bank account", "Getting a passport", "Voting in an election",
+                "Recycling properly", "Composting food waste", "Growing vegetables", "Making a budget", "Saving for retirement",
+                "Getting a pet", "Training a dog", "Adopting a child", "Planning a wedding", "Buying a house",
+                
+                // Food and Drink (More Complex)
+                "Sushi", "Lasagna", "Tiramisu", "Croissant", "Ratatouille",
+                "Paella", "Curry", "Pad Thai", "Pho", "Tacos",
+                "Guacamole", "Hummus", "Falafel", "Couscous", "Risotto",
+                "Gnocchi", "Bruschetta", "Gazpacho", "Borscht", "Goulash",
+                "Baklava", "Churros", "Crème brûlée", "Macarons", "Gelato",
+                "Espresso", "Cappuccino", "Chai tea", "Kombucha", "Smoothie",
+                "Mojito", "Margarita", "Sangria", "Champagne", "Whiskey",
+                "Sashimi", "Dim sum", "Tandoori chicken", "Beef Wellington", "Lobster bisque",
+                
+                // Movie Characters (Medium Complexity)
+                "Jack Sparrow", "Iron Man", "Wonder Woman", "Harry Potter", "Hermione Granger",
+                "Darth Vader", "Luke Skywalker", "Princess Leia", "James Bond", "Sherlock Holmes",
+                "Gandalf", "Frodo Baggins", "Gollum", "Neo", "Trinity",
+                "Katniss Everdeen", "Forrest Gump", "E.T.", "Indiana Jones", "Rocky Balboa",
+                "Willy Wonka", "Mary Poppins", "Dorothy", "Tin Man", "Scarecrow",
+                "Cowardly Lion", "Wicked Witch", "Captain America", "Black Widow", "Thor",
+                "Hulk", "Black Panther", "Doctor Strange", "Shrek", "Donkey",
+                "Princess Fiona", "Kung Fu Panda", "Hiccup", "Toothless", "Moana",
+                
+                // Idioms (Simple)
+                "Break a leg", "Piece of cake", "Cost an arm and a leg", "Hit the road", "Under the weather",
+                "Spill the beans", "Once in a blue moon", "The ball is in your court", "Bite the bullet", "Cut corners",
+                "Hit the nail on the head", "Let the cat out of the bag", "Miss the boat", "Pull someone's leg", "Steal the show",
+                "Straight from the horse's mouth", "The last straw", "The best of both worlds", "When pigs fly", "You can't judge a book by its cover",
+                
+                // Locations
+                "Eiffel Tower", "Statue of Liberty", "Great Wall of China", "Taj Mahal", "Pyramids of Egypt",
+                "Colosseum", "Machu Picchu", "Grand Canyon", "Niagara Falls", "Mount Everest",
+                "Amazon Rainforest", "Sahara Desert", "Great Barrier Reef", "Venice canals", "Times Square",
+                "Hollywood", "Las Vegas", "Hawaii beaches", "African safari", "Northern Lights",
+                
+                // Professions
+                "Doctor", "Teacher", "Firefighter", "Police officer", "Chef",
+                "Pilot", "Astronaut", "Scientist", "Lawyer", "Architect",
+                "Engineer", "Nurse", "Veterinarian", "Farmer", "Electrician",
+                "Plumber", "Carpenter", "Mechanic", "Photographer", "Journalist",
+                "Actor", "Musician", "Dancer", "Painter", "Writer",
+                "Athlete", "Coach", "Referee", "Lifeguard", "Tour guide",
+                "Translator", "Programmer", "Web designer", "Social media manager", "Marketing specialist",
+                "Financial advisor", "Real estate agent", "Insurance agent", "Travel agent", "Flight attendant",
+                "Barista", "Bartender", "Waiter", "Cashier", "Retail worker",
+                "Librarian", "Zookeeper", "Park ranger", "Marine biologist", "Archaeologist"
+            ],
+            hard: [
+                // Complex Idioms and Phrases
+                "Barking up the wrong tree", "Beating around the bush", "Burning the midnight oil", "Can't see the forest for the trees", "Caught between a rock and a hard place",
+                "Cutting off your nose to spite your face", "Don't count your chickens before they hatch", "Every cloud has a silver lining", "Getting a taste of your own medicine", "Going on a wild goose chase",
+                "Jumping out of the frying pan into the fire", "Killing two birds with one stone", "Making a mountain out of a molehill", "Putting the cart before the horse", "Running around like a chicken with its head cut off",
+                "Selling like hotcakes", "Taking a shot in the dark", "The pot calling the kettle black", "Throwing caution to the wind", "Walking on eggshells",
+                "A penny for your thoughts", "Add insult to injury", "All that glitters is not gold", "At the drop of a hat", "Back to square one",
+                "Barking up the wrong tree", "Beat around the bush", "Bite off more than you can chew", "Break the ice", "Burn bridges",
+                "Call it a day", "Cry over spilled milk", "Cut to the chase", "Don't put all your eggs in one basket", "Draw the line",
+                "Face the music", "Get your act together", "Give someone the cold shoulder", "Go back to the drawing board", "Hit the sack",
+                "In the heat of the moment", "Jump on the bandwagon", "Keep your chin up", "Let sleeping dogs lie", "Make ends meet",
+                
+                // Complex Movie Characters and References
+                "Tyler Durden from Fight Club", "Hannibal Lecter", "Ellen Ripley from Alien", "The Joker from The Dark Knight", "Vito Corleone from The Godfather",
+                "Travis Bickle from Taxi Driver", "HAL 9000 from 2001: A Space Odyssey", "Norman Bates from Psycho", "Clarice Starling from Silence of the Lambs", "Anton Chigurh from No Country for Old Men",
+                "Jules Winnfield from Pulp Fiction", "Keyser Söze from The Usual Suspects", "Randle McMurphy from One Flew Over the Cuckoo's Nest", "Michael Corleone", "Tony Montana from Scarface",
+                "Hans Landa from Inglourious Basterds", "Alex DeLarge from A Clockwork Orange", "T-800 from Terminator", "Roy Batty from Blade Runner", "Verbal Kint from The Usual Suspects",
+                "Atticus Finch from To Kill a Mockingbird", "Charles Foster Kane from Citizen Kane", "Rick Blaine from Casablanca", "Scarlett O'Hara from Gone with the Wind", "Holly Golightly from Breakfast at Tiffany's",
+                "Don Draper from Mad Men", "Walter White from Breaking Bad", "Tony Soprano from The Sopranos", "Dexter Morgan from Dexter", "Omar Little from The Wire",
+                
+                // Historical Figures and Events
+                "The signing of the Declaration of Independence", "The fall of the Berlin Wall", "The assassination of JFK", "The first moon landing", "The sinking of the Titanic",
+                "The French Revolution", "The Industrial Revolution", "The Renaissance", "The Cold War", "World War II",
+                "Alexander the Great's conquests", "The rise and fall of the Roman Empire", "The discovery of America by Columbus", "The Black Death pandemic", "The invention of the printing press",
+                "The American Civil War", "The Russian Revolution", "The Great Depression", "The Civil Rights Movement", "The Digital Revolution",
+                "Cleopatra", "Leonardo da Vinci", "Galileo Galilei", "Isaac Newton", "Marie Curie",
+                "Albert Einstein", "Mahatma Gandhi", "Martin Luther King Jr.", "Nelson Mandela", "Winston Churchill",
+                
+                // Complex Concepts
+                "Quantum entanglement", "Artificial intelligence ethics", "Climate change adaptation", "Cryptocurrency blockchain technology", "Genetic engineering",
+                "String theory in physics", "Dark matter and dark energy", "Neuroplasticity", "Existentialism", "Postmodernism",
+                "Cultural relativism", "Cognitive dissonance", "Game theory", "Moral relativism vs. absolutism", "The nature vs. nurture debate",
+                "The Fermi paradox", "The butterfly effect", "The prisoner's dilemma", "The trolley problem", "The Turing test",
+                "Sustainable development", "Globalization effects", "Digital privacy in the information age", "The ethics of autonomous vehicles", "Transhumanism",
+                
+                // Complex Literature References
+                "Waiting for Godot", "The Metamorphosis by Kafka", "One Hundred Years of Solitude", "Crime and Punishment", "The Brothers Karamazov",
+                "Ulysses by James Joyce", "War and Peace", "Moby Dick", "The Great Gatsby", "To Kill a Mockingbird",
+                "1984 by George Orwell", "Brave New World", "The Catcher in the Rye", "Pride and Prejudice", "Jane Eyre",
+                "The Lord of the Rings", "Don Quixote", "The Divine Comedy", "Paradise Lost", "Hamlet",
+                "Macbeth", "King Lear", "The Odyssey", "The Iliad", "Beowulf",
+                
+                // Complex Art and Music
+                "Guernica by Pablo Picasso", "The Persistence of Memory by Salvador Dalí", "The Starry Night by Vincent van Gogh", "The Last Supper by Leonardo da Vinci", "The Scream by Edvard Munch",
+                "Beethoven's 9th Symphony", "Mozart's Requiem", "Bach's Brandenburg Concertos", "Stravinsky's The Rite of Spring", "Wagner's Ring Cycle",
+                "Impressionism", "Cubism", "Surrealism", "Abstract Expressionism", "Renaissance art",
+                "Baroque music", "Jazz improvisation", "Classical sonata form", "Opera", "Hip-hop culture",
+                
+                // Complex Scientific Concepts
+                "Photosynthesis", "Cellular respiration", "DNA replication", "Plate tectonics", "Evolution by natural selection",
+                "General relativity", "Quantum mechanics", "Thermodynamics", "Electromagnetism", "Nuclear fusion",
+                "The human genome", "Stem cell research", "Antibiotic resistance", "Nanotechnology", "Renewable energy",
+                "Black holes", "The Big Bang theory", "The multiverse hypothesis", "Chaos theory", "Fractals",
+                
+                // Complex Philosophical Concepts
+                "Plato's Cave allegory", "Descartes' 'I think, therefore I am'", "Kant's categorical imperative", "Nietzsche's 'God is dead'", "Sartre's existentialism",
+                "The mind-body problem", "Free will vs. determinism", "Utilitarianism", "Deontological ethics", "Virtue ethics",
+                "Solipsism", "Epistemology", "Metaphysics", "Phenomenology", "Nihilism",
+                "The problem of evil", "The ship of Theseus paradox", "Zeno's paradoxes", "The omnipotence paradox", "The simulation hypothesis"
+            ]
+        };
+
+        // Function to get a random item from an array
+        function getRandomItem(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        // Function to generate and display random propositions
+        function generatePropositions() {
+            document.getElementById('easyProposition').textContent = getRandomItem(propositions.easy);
+            document.getElementById('mediumProposition').textContent = getRandomItem(propositions.medium);
+            document.getElementById('hardProposition').textContent = getRandomItem(propositions.hard);
+        }
+
+        // Add event listener to the button
+        document.getElementById('generateBtn').addEventListener('click', generatePropositions);
+
+        // Generate initial propositions when the page loads
+        generatePropositions();
+    </script>
+</body>
+</html>
